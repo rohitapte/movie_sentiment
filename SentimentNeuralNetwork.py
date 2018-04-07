@@ -3,6 +3,7 @@ import tensorflow as tf
 from data_batcher import SentimentDataObject
 import os
 from modules import NeuralNetworkHiddenLayer
+from datetime import datetime
 
 tf.app.flags.DEFINE_integer("gpu", 1, "Which GPU to use, if you have multiple.")
 tf.app.flags.DEFINE_integer("num_epochs",100, "Number of epochs to train. 0 means train indefinitely")
@@ -10,7 +11,7 @@ tf.app.flags.DEFINE_integer("num_epochs",100, "Number of epochs to train. 0 mean
 # Hyperparameters
 tf.app.flags.DEFINE_float("learning_rate",0.001,"Learning rate.")
 tf.app.flags.DEFINE_float("dropout",0.5,"Fraction of units randomly dropped on non-recurrent connections.")
-tf.app.flags.DEFINE_integer("batch_size",10000,"Batch size to use")
+tf.app.flags.DEFINE_integer("batch_size",20000,"Batch size to use")
 ###tf.app.flags.DEFINE_integer("hidden_size",200,"Size of the hidden states")
 tf.app.flags.DEFINE_integer("review_length",57,"The maximum words in each review")
 tf.app.flags.DEFINE_integer("word_length", 15, "The maximum characters in each word")
@@ -59,7 +60,7 @@ with tf.variable_scope('full_layer1') as scope:
 
 logits=tf.identity(final_output,name="logits")
 
-cost=tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits,labels=ratings))
+cost=tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits,labels=ratings))
 train_step=tf.train.AdamOptimizer(learning_rate=FLAGS.learning_rate).minimize(cost)
 correct_prediction=tf.equal(tf.argmax(final_output,1),tf.argmax(ratings,1),name='correct_prediction')
 accuracy=tf.reduce_mean(tf.cast(correct_prediction,tf.float32),name='accuracy')
@@ -100,18 +101,19 @@ for epoch in range(FLAGS.num_epochs):
 print('Final validation_accuracy => ' +str(get_validation_accuracy()))
 output=[]
 lineids=[]
-for review_words_batch,review_chars_batch,review_mask_batch,ratings_batch,lineid_batch in dataObject.generate_test_data():
+for review_words_batch,review_chars_batch,review_mask_batch,lineid_batch in dataObject.generate_test_data():
     test_data_feed = {
         review_words: review_words_batch,
         char_words: review_chars_batch,
         review_mask: review_mask_batch,
-        ratings: ratings_batch,
         keep_prob: 1.0,
     }
     test_output = sess.run(tf.argmax(final_output, 1), feed_dict=test_data_feed)
-    lineids.extend(lineid_batch)
-    output.extend(test_output)
+    lineids.extend(lineid_batch.tolist())
+    output.extend(test_output.tolist())
 
-print(lineids)
-print(output)
-
+filename=datetime.now().strftime('%Y%m%d%I%M')
+with open(filename,'w') as f:
+    f.write("PhraseId,Sentiment\n")
+    for i,item in output:
+        f.write(str(lineids[i])+','+str(item))
