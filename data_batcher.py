@@ -164,16 +164,19 @@ class SentimentDataObject(object):
             review_words_for_mask=[]
             review_words=[]
             review_chars=[]
+            lineids=[]
             for (text,lineid) in self.test_data[i*self.batch_size:(i+1)*self.batch_size]:
                 word_ids, word_ids_to_vectors, char_ids_to_vectors=get_ids_and_vectors(text, self.word2id,self.char2id,self.word_embed_matrix,self.char_embed_matrix,self.review_length,self.word_length,self.discard_long)
                 review_words_for_mask.append(word_ids)
                 review_words.append(word_ids_to_vectors)
                 review_chars.append(char_ids_to_vectors)
+                lineids.append(lineid)
             review_words = np.array(review_words)
             review_chars = np.array(review_chars)
             review_words_for_mask = np.array(review_words_for_mask)
             review_mask = (review_words_for_mask != PAD_ID).astype(np.int32)
-            yield review_words, review_chars, review_mask,lineid
+            lineids=np.array(lineids)
+            yield review_words, review_chars, review_mask,lineids
 
 #emb_matrix_char, char2id, id2char=word_and_character_vectors.get_char('C:\\Users\\tihor\\Documents\\ml_data_files')
 #emb_matrix_word, word2id, id2word=word_and_character_vectors.get_glove('C:\\Users\\tihor\\Documents\\ml_data_files')
