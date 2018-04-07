@@ -5,7 +5,7 @@ import os
 from modules import NeuralNetworkHiddenLayer
 
 tf.app.flags.DEFINE_integer("gpu", 1, "Which GPU to use, if you have multiple.")
-tf.app.flags.DEFINE_integer("num_epochs",100, "Number of epochs to train. 0 means train indefinitely")
+tf.app.flags.DEFINE_integer("num_epochs",2, "Number of epochs to train. 0 means train indefinitely")
 
 # Hyperparameters
 tf.app.flags.DEFINE_float("learning_rate",0.001,"Learning rate.")
@@ -98,3 +98,4 @@ for epoch in range(FLAGS.num_epochs):
     print('validation_accuracy => ' + str(get_validation_accuracy()))
 
 print('Final validation_accuracy => ' +str(get_validation_accuracy()))
+
