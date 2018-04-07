@@ -115,5 +115,5 @@ for review_words_batch,review_chars_batch,review_mask_batch,lineid_batch in data
 filename=datetime.now().strftime('%Y%m%d%I%M')
 with open(filename,'w') as f:
     f.write("PhraseId,Sentiment\n")
-    for i,item in output:
+    for i,item in enumerate(output):
         f.write(str(lineids[i])+','+str(item))
