@@ -173,7 +173,7 @@ class SentimentDataObject(object):
             review_chars = np.array(review_chars)
             review_words_for_mask = np.array(review_words_for_mask)
             review_mask = (review_words_for_mask != PAD_ID).astype(np.int32)
-            yield review_words, review_chars, review_mask
+            yield review_words, review_chars, review_mask,lineid
 
 #emb_matrix_char, char2id, id2char=word_and_character_vectors.get_char('C:\\Users\\tihor\\Documents\\ml_data_files')
 #emb_matrix_word, word2id, id2word=word_and_character_vectors.get_glove('C:\\Users\\tihor\\Documents\\ml_data_files')
