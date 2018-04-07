@@ -5,7 +5,7 @@ import os
 from modules import NeuralNetworkHiddenLayer
 
 tf.app.flags.DEFINE_integer("gpu", 1, "Which GPU to use, if you have multiple.")
-tf.app.flags.DEFINE_integer("num_epochs",2, "Number of epochs to train. 0 means train indefinitely")
+tf.app.flags.DEFINE_integer("num_epochs",100, "Number of epochs to train. 0 means train indefinitely")
 
 # Hyperparameters
 tf.app.flags.DEFINE_float("learning_rate",0.001,"Learning rate.")
@@ -98,4 +98,20 @@ for epoch in range(FLAGS.num_epochs):
     print('validation_accuracy => ' + str(get_validation_accuracy()))
 
 print('Final validation_accuracy => ' +str(get_validation_accuracy()))
+output=[]
+lineids=[]
+for review_words_batch,review_chars_batch,review_mask_batch,ratings_batch,lineid_batch in dataObject.generate_test_data():
+    test_data_feed = {
+        review_words: review_words_batch,
+        char_words: review_chars_batch,
+        review_mask: review_mask_batch,
+        ratings: ratings_batch,
+        keep_prob: 1.0,
+    }
+    test_output = sess.run(tf.argmax(final_output, 1), feed_dict=test_data_feed)
+    lineids.extend(lineid_batch)
+    output.extend(test_output)
+
+print(lineids)
+print(output)
 
