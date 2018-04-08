@@ -6,7 +6,7 @@ from modules import NeuralNetworkHiddenLayer
 from datetime import datetime
 
 tf.app.flags.DEFINE_integer("gpu", 1, "Which GPU to use, if you have multiple.")
-tf.app.flags.DEFINE_integer("num_epochs",1, "Number of epochs to train. 0 means train indefinitely")
+tf.app.flags.DEFINE_integer("num_epochs",100, "Number of epochs to train. 0 means train indefinitely")
 
 # Hyperparameters
 tf.app.flags.DEFINE_float("learning_rate",0.001,"Learning rate.")
