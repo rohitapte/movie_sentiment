@@ -33,7 +33,6 @@ sentiment_model=SentimentVanillaNeuralNetworkModel(FLAGS,word2id,char2id,emb_mat
 init=tf.global_variables_initializer()
 sess=tf.Session()
 sess.run(init)
-print(FLAGS.num_epochs)
 for epoch in range(FLAGS.num_epochs):
     validation_accuracy=sentiment_model.run_epoch(sess)
 
