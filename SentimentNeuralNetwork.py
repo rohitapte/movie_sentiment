@@ -6,7 +6,7 @@ from modules import NeuralNetworkHiddenLayer
 from datetime import datetime
 
 tf.app.flags.DEFINE_integer("gpu", 1, "Which GPU to use, if you have multiple.")
-tf.app.flags.DEFINE_integer("num_epochs",100, "Number of epochs to train. 0 means train indefinitely")
+tf.app.flags.DEFINE_integer("num_epochs",1, "Number of epochs to train. 0 means train indefinitely")
 
 # Hyperparameters
 tf.app.flags.DEFINE_float("learning_rate",0.001,"Learning rate.")
@@ -112,8 +112,8 @@ for review_words_batch,review_chars_batch,review_mask_batch,lineid_batch in data
     lineids.extend(lineid_batch.tolist())
     output.extend(test_output.tolist())
 
-filename=datetime.now().strftime('%Y%m%d%I%M')
+filename='submission_'+datetime.now().strftime('%Y%m%d%I%M')+'.csv'
 with open(filename,'w') as f:
     f.write("PhraseId,Sentiment\n")
     for i,item in enumerate(output):
-        f.write(str(lineids[i])+','+str(item))
+        f.write(str(lineids[i])+','+str(item)+'\n')
