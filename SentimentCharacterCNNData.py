@@ -4,9 +4,9 @@ import numpy as np
 import csv
 from sklearn.model_selection import train_test_split
 
-glove_file='../glove/glove.6B.300d.txt'
-pretrained_vectors=pd.read_table(glove_file, sep=" ", index_col=0, header=None, quoting=csv.QUOTE_NONE)
-base_vector=pretrained_vectors.loc['this'].as_matrix()
+#glove_file='../glove/glove.6B.300d.txt'
+#pretrained_vectors=pd.read_table(glove_file, sep=" ", index_col=0, header=None, quoting=csv.QUOTE_NONE)
+#base_vector=pretrained_vectors.loc['this'].as_matrix()
 
 def vectorize_sentence(sentence,character_mappings,length):
     x=[]
@@ -21,7 +21,7 @@ def vectorize_sentence(sentence,character_mappings,length):
 class SentimentCharacterCNNObject(object):
     def __init__(self, test_ratio=0.1):
         self.df_train_input=pd.read_csv('data/train.tsv', sep='\t')
-        self.df_test_input=pd.read_csv('/test.tsv', sep='\t')
+        self.df_test_input=pd.read_csv('data/test.tsv', sep='\t')
         sentences_train=self.df_train_input['Phrase'].tolist()
         sentences_test=self.df_test_input['Phrase'].tolist()
         text=''
