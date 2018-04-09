@@ -1,6 +1,6 @@
 import tensorflow as tf
 from model import NeuralLayer
-#from tensorflow.python.ops import rnn_cell
+from tensorflow.python.ops import variable_scope as vs
 
 class NeuralNetworkHiddenLayer(NeuralLayer):
     def __init__(self,name,input_size,hidden_size,keep_prop):
@@ -78,11 +78,23 @@ class LSTMLayer(NeuralLayer):
     def build_graph(self,values,masks):
         input_lens=tf.reduce_sum(masks, reduction_indices=1)
         val,state=tf.nn.dynamic_rnn(cell=self.rnn_cell,inputs=values,sequence_length=input_lens,dtype=tf.float32)   #val is (batch,num_words,hidden_size)
-        #val_transposed= tf.transpose(val,[1, 0, 2])
-        #last=tf.gather(val_transposed,int(val_transposed.get_shape()[0])-1,name="lstm_state")
-        #print('last shape')
-        #print(last.get_shape())
         final_value=tf.gather(val,int(val.get_shape()[1]) - 1,axis=1,name="lstm_state")
-        #print('zz shape')
-        #print(zz.get_shape())
         return final_value          #batch,hidden_size
+
+class BiRNNLayer(NeuralLayer):
+    def __init__(self,name,hidden_size,keep_prob):
+        self.name=name
+        self.hidden_size=hidden_size
+        self.keep_prob=keep_prob
+        self.rnn_cell_fw=tf.contrib.rnn.LSTMCell(self.hidden_size)
+        self.rnn_cell_fw=tf.contrib.rnn.DropoutWrapper(self.rnn_cell_fw,input_keep_prob=self.keep_prob)
+        self.rnn_cell_bw=tf.contrib.rnn.LSTMCell(self.hidden_size)
+        self.rnn_cell_bw=tf.contrib.rnn.DropoutWrapper(self.rnn_cell_bw, input_keep_prob=self.keep_prob)
+
+    def build_graph(self,inputs,masks):
+        with vs.variable_scope(self.name):
+            input_lens=tf.reduce_sum(masks,reduction_indices=1)
+            (fw_out,bw_out),_=tf.nn.bidirectional_dynamic_rnn(self.rnn_cell_fw,self.rnn_cell_bw,inputs,input_lens,dtype=tf.float32)
+            out=tf.concat([fw_out,bw_out],2)
+            out=tf.nn.dropout(out,self.keep_prob)
+            return out
