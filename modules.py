@@ -59,3 +59,30 @@ class Convolution1DLayer(NeuralLayer):
             return context_pool     #context_pool has shape(1,conv_relu[1]/pool_size,channels)
         else:
             return conv_relu  # conv has shape (1,X/pool_size[1],Y/pool_size[2],channel_size)
+
+class LSTMLayer(NeuralLayer):
+    def __init__(self,name,hidden_size,keep_prop,num_layers=1):
+        self.name=name
+        self.hidden_size=hidden_size
+        self.keep_prob=keep_prop
+        if num_layers==1:
+            self.rnn_cell=self.create_one_cell()
+        else:
+            self.rnn_cell=tf.contrib.rnn.MultiRNNCell([self.create_one_cell() for _ in range(num_layers)],state_is_tuple=True)
+
+    def create_one_cell(self):
+        cell=tf.contrib.rnn.LSTMCell(self.hidden_size)
+        cell=tf.contrib.rnn.DropoutWrapper(cell,input_keep_prob=self.keep_prob)
+        return cell
+
+    def build_graph(self,values,masks):
+        input_lens=tf.reduce_sum(masks, reduction_indices=1)
+        val,state=tf.nn.dynamic_rnn(cell=self.rnn_cell,inputs=values,sequence_length=input_lens,dtype=tf.float32)   #val is (batch,num_words,hidden_size)
+        #val_transposed= tf.transpose(val,[1, 0, 2])
+        #last=tf.gather(val_transposed,int(val_transposed.get_shape()[0])-1,name="lstm_state")
+        #print('last shape')
+        #print(last.get_shape())
+        final_value=tf.gather(val,int(val.get_shape()[1]) - 1,axis=1,name="lstm_state")
+        #print('zz shape')
+        #print(zz.get_shape())
+        return final_value          #batch,hidden_size
