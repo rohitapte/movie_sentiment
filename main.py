@@ -2,7 +2,7 @@ from word_and_character_vectors import get_char,get_glove
 import tensorflow as tf
 import os
 from datetime import datetime
-from sentiment_model import SentimentVanillaNeuralNetworkModel
+from sentiment_model import SentimentVanillaNeuralNetworkModel,SentimentWordCNNNeuralNetwork
 
 tf.app.flags.DEFINE_integer("gpu", 1, "Which GPU to use, if you have multiple.")
 tf.app.flags.DEFINE_integer("num_epochs",100, "Number of epochs to train. 0 means train indefinitely")
@@ -10,7 +10,7 @@ tf.app.flags.DEFINE_integer("num_epochs",100, "Number of epochs to train. 0 mean
 # Hyperparameters
 tf.app.flags.DEFINE_float("learning_rate",0.001,"Learning rate.")
 tf.app.flags.DEFINE_float("dropout",0.5,"Fraction of units randomly dropped on non-recurrent connections.")
-tf.app.flags.DEFINE_integer("batch_size",20000,"Batch size to use")
+tf.app.flags.DEFINE_integer("batch_size",10000,"Batch size to use")
 ###tf.app.flags.DEFINE_integer("hidden_size",200,"Size of the hidden states")
 tf.app.flags.DEFINE_integer("review_length",57,"The maximum words in each review")
 tf.app.flags.DEFINE_integer("word_length", 15, "The maximum characters in each word")
@@ -28,7 +28,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = str(FLAGS.gpu)
 emb_matrix_char, char2id, id2char=get_char('../ml_data_files')
 emb_matrix_word, word2id, id2word=get_glove('../ml_data_files')
 
-sentiment_model=SentimentVanillaNeuralNetworkModel(FLAGS,word2id,char2id,emb_matrix_word,emb_matrix_char)
+#sentiment_model=SentimentVanillaNeuralNetworkModel(FLAGS,word2id,char2id,emb_matrix_word,emb_matrix_char)
+sentiment_model=SentimentWordCNNNeuralNetwork(FLAGS,word2id,char2id,emb_matrix_word,emb_matrix_char)
 
 init=tf.global_variables_initializer()
 sess=tf.Session()
