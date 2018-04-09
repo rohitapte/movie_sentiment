@@ -22,12 +22,12 @@ GLOVE_DIMENSION=300
 FASTTEXT_VOCAB_SIZE=2000000
 FASTTEXT_FILENAME='crawl-300d-2M.vec'
 FASTTEXT_DIMENSION=300
-CHAR_VOCAB_SIZE=65
+#CHAR_VOCAB_SIZE=65
 CHAR_FILENAME='char_dim_wordSize_word_size.txt'
-CHAR_DIMENSION=128
-CHAR_WORD_SAMPLING=5
+#CHAR_DIMENSION=128
+#CHAR_WORD_SAMPLING=5
 
-def get_char(data_file_path):
+def get_char(data_file_path,CHAR_DIMENSION=128,CHAR_WORD_SAMPLING=5,CHAR_VOCAB_SIZE=65):
     filename=CHAR_FILENAME
     filename=filename.replace('dim',str(CHAR_DIMENSION))
     filename=filename.replace('word_size',str(CHAR_WORD_SAMPLING))
