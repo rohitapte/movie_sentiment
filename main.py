@@ -1,4 +1,6 @@
-from word_and_character_vectors import get_char,get_glove
+import sys
+sys.path.append('../python_libraries')
+from nlp_functions.word_and_character_vectors import get_char,get_glove
 import tensorflow as tf
 import os
 from datetime import datetime

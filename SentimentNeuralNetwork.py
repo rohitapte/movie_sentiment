@@ -1,8 +1,10 @@
-from word_and_character_vectors import get_char,get_glove
+#import sys
+#sys.path.append('../python_libraries')
+from nlp_functions.word_and_character_vectors import get_char,get_glove
+from tensorflow_modules.modules import NeuralNetworkHiddenLayer
 import tensorflow as tf
 from data_batcher import SentimentDataObject
 import os
-from modules import NeuralNetworkHiddenLayer
 from datetime import datetime
 
 tf.app.flags.DEFINE_integer("gpu", 1, "Which GPU to use, if you have multiple.")

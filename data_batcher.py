@@ -1,10 +1,13 @@
-from word_and_character_vectors import PAD_ID,UNK_ID
+#import sys
+#sys.path.append('../python_libraries')
+from nlp_functions.word_and_character_vectors import PAD_ID,UNK_ID
+from nlp_functions.sentence_operations import get_ids_and_vectors
 #import word_and_character_vectors
 from tqdm import tqdm
 import numpy as np
 import random
 from sklearn.model_selection import train_test_split
-from sentence_operations import get_ids_and_vectors
+
 
 class SentimentDataObject(object):
     def __init__(self,word2id,char2id,word_embed_matrix,char_embed_matrix,train_path,test_path,batch_size,review_length,word_length,discard_long=False,test_size=0.1):

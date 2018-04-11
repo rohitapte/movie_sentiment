@@ -1,8 +1,10 @@
-from modules import NeuralNetworkHiddenLayer,Convolution1DLayer,LSTMLayer
+#import sys
+#sys.path.append('../python_libraries')
+from tensorflow_modules.modules import NeuralNetworkHiddenLayer,Convolution1DLayer,LSTMLayer
+from tensorflow_modules.model import Model
 from data_batcher import SentimentDataObject
 import tensorflow as tf
 from tensorflow.python.ops import variable_scope as vs
-from model import Model
 from math import ceil
 
 class SentimentVanillaNeuralNetworkModel(Model):
